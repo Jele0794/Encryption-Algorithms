@@ -1,5 +1,3 @@
-require "pry"
-
 class Decipher
 
 	def initialize(matrizAbcd, cipherText)

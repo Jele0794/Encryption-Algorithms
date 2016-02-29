@@ -1,4 +1,3 @@
-require 'pry'
 class Videcipher
 
 	def initialize(cipherText, arregloNumsKey)
@@ -19,7 +18,6 @@ class Videcipher
 
 		i += 1
 		end
-		#binding.pry
 		return plainText
 	end
 
@@ -39,7 +37,6 @@ class Videcipher
 
 	def modDes(letraCipNum, keyNum)
 		mod = (letraCipNum - keyNum) % 26
-		#binding.pry
 		return mod
 
 	end

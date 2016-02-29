@@ -1,4 +1,3 @@
-require 'pry'
 require_relative "decipher"
 
 class Playfair
