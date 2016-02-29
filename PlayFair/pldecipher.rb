@@ -1,4 +1,4 @@
-class Decipher
+class Pldecipher
 
 	def initialize(matrizAbcd, cipherText)
 		@cipherText = cipherText

@@ -1,4 +1,4 @@
-require_relative "decipher"
+require_relative "pldecipher"
 
 class Playfair
 	def initialize(keyword="mundo", plainText)
@@ -9,7 +9,7 @@ class Playfair
 		puts "Texto plano porcesado: #{@plainTextP}"
 		@cipherText = ciphering(@plainTextP)
 		puts "Texto encriptado por el algoritmo: #{@cipherText}"
-		decipher = Decipher.new(@matrizAbcd, @cipherText)
+		pldecipher = Pldecipher.new(@matrizAbcd, @cipherText)
 	end
 
 	def crearMatriz
