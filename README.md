@@ -19,7 +19,7 @@ The Vigenère cipher uses a 26×26 table with A to Z as the row heading and colu
  **Ci = EK(Mi) = (Mi + Ki) mod 26**
 
 ## Description
-Implementing Playfair
+### Implementing Playfair
 For this implementation, first we created a matrix given a keyword, for this we add to an array, letter by letter the keyword, then fill the array with the every letter of the alphabet in order, following that we use a method that checks every letter on the matrix and eliminate any duplicate, finally we insert to the matrix the letters in the array, making a 5x5 array. The I and J in the matrix are considered the same, so we consider I as J, and eliminate the J.
 
 ```ruby
