@@ -1,9 +1,3 @@
-<style>
-p{text-align: justify; font-family: Cochin; font-size: 14pt; line-height: 120%;}
-h3{text-align: left; font-family: Cochin}
-body{background-color: white}
-</style>
-
 ### Subject: Information Security
 ### Lecturer: Dr. Vicente Alarcón Aquino
 ### Student: Jorge Edmundo López Enríquez -146165
@@ -136,7 +130,7 @@ def textManager
 		return keywordProcesada
 	end
 end
-	```
+```
 
 With this, we can cipher the plaintext, we use the mod formula to perform the ciphering.
 ```ruby
