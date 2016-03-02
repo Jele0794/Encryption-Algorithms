@@ -1,15 +1,20 @@
+require 'pry'
 require_relative "pldecipher"
 
 class Playfair
-	def initialize(keyword="mundo", plainText)
-		@keyword = keyword
+	def initialize()
+		print "Llave: "
+		@keyword = gets.chomp
 		@keyword.upcase!
 		@matrizAbcd = crearMatriz
+		print "Plain text: "
+		plainText = gets.chomp
 		@plainTextP = plainManager(plainText)
 		puts "Texto plano porcesado: #{@plainTextP}"
 		@cipherText = ciphering(@plainTextP)
 		puts "Texto encriptado por el algoritmo: #{@cipherText}"
 		pldecipher = Pldecipher.new(@matrizAbcd, @cipherText)
+		binding.pry
 	end
 
 	def crearMatriz
@@ -249,4 +254,4 @@ class Playfair
 	end
 end
 
-a = Playfair.new("isabel", "Hola papa soy mundo")
+a = Playfair.new()

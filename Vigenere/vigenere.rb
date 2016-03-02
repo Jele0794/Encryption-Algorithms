@@ -86,4 +86,4 @@ class Vigenere
 	end
 end
 
-a = Vigenere.new("edmundo", "Meet me after the toga party")
+a = Vigenere.new("deceptive", "we are discovered save yourself")
