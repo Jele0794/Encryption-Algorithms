@@ -6,9 +6,18 @@ require_relative "s-box"
 class Des
 
 def initialize(plainText="HOLAMUND")
+  @wholeArray = Array.new()
    plainBinText = getBin(plainText)
    creatingSBoxes
    cipherText = encipherment(plainBinText)
+   bool, d0, c0 = permutedChoiceOne("holiboli")
+   i = 0
+   @wholeArray.push(keyGeneration(d0,c0,i))
+   while i < 15
+     @wholeArray.push(keyGeneration(@wholeArray[i][0], @wholeArray[i][1], i))
+     i += 1
+   end
+   binding.pry
 end
 
 def encipherment(plainBinText)
@@ -33,9 +42,8 @@ def encipherment(plainBinText)
 
       swapArray = lastSwap(leftArr, rightArr)
       cipherTextBin = finalPermutation(swapArray)
-      binding.pry
-      cipherText = fromBinToAscii(cipherTextBin)
-      return cipherText
+      # cipherText = fromBinToAscii(cipherTextBin)
+      return cipherTextBin
 
 
    # TODO hace falta 32-bit Swap
@@ -153,34 +161,34 @@ def finalPermutation(swapArray)
    return matrizFP
 end
 
-def fromBinToAscii(binArray)
-   binString = ""
-   i = 0
-   # while i <  8
-   #    j = 0
-   #    while j < 8
-   #       binString = binString + binArray[i][j].to_s
-   #       j += 1
-   #    end
-   #    i += 1
-   # end
-
-   # i = 0
-   # while i < 8
-   #    binString[i, 8].to_i
-   # end
-
-i = 0
-newArray = Array.new()
-# TODO Se necesita convertir de binario a Ascii y se termina!!! ""
-while i < 8
-   newArray.push(convertIntArrToStrArr(binArray[i]))
-i += 1
-end
-   c = newArray[0].pack('C')
-   binding.pry
-
-end
+# def fromBinToAscii(binArray)
+#    binString = ""
+#    i = 0
+#    # while i <  8
+#    #    j = 0
+#    #    while j < 8
+#    #       binString = binString + binArray[i][j].to_s
+#    #       j += 1
+#    #    end
+#    #    i += 1
+#    # end
+#
+#    # i = 0
+#    # while i < 8
+#    #    binString[i, 8].to_i
+#    # end
+#
+# i = 0
+# newArray = Array.new()
+# # TODO Se necesita convertir de binario a Ascii y se termina!!! ""
+# while i < 8
+#    newArray.push(convertIntArrToStrArr(binArray[i]))
+# i += 1
+# end
+#    c = newArray[0].pack('C')
+#    binding.pry
+#
+# end
 
 # This methos divides the full block in two halves
 def divideInTwo(iPResult)
@@ -338,6 +346,107 @@ def convertIntArrToStrArr (arrayToConvert)
    end
    return arrayConverted
 end
+
+
+def permutedChoiceOne(key)
+   siEsValido = false
+   d0 = Array.new
+   c0 = Array.new
+   c0Indices = [57,49,41,33,25,17,9,
+                1,58,50,42,34,26,18,
+                10,2,59,51,43,35,27,
+                19,11,3,60,52,44,36]
+   d0Indices = [63,55,47,39,31,23,15,
+                7,62,54,46,38,30,22,
+                14,6,61,53,45,37,29,
+                21,13,5,28,20,12,4]
+   #-----------------------
+
+   if key.length == 8 or key.length == 16
+       siEsValido = true
+     end
+   if siEsValido == true and key.length == 8
+       bits = key.unpack('B64')
+   elsif siEsValido == true and key.length == 16
+       bits = key.to_i(16).to_s(2).unpack('B64')
+     end
+
+   if siEsValido == true
+         j = 0
+         i = 0
+         while j < 28
+            c0.push(bits[i][(c0Indices[j]-1)])
+            d0.push(bits[i][(d0Indices[j]-1)])
+            j += 1
+         end
+    end
+   return siEsValido, d0, c0
+ end
+
+  def keyGeneration(d0, c0, numeroRound)
+    matrizRevuelta = Array.new
+    c1 = Array.new
+    d1 = Array.new
+    newKey = Array.new
+    permutedChoicetwo = [14,17,11,24,1,5,3,28,15,6,21,
+                         10,23,19,12,4,26,8,16,7,27,20,
+                         13,2,41,52,31,37,47,55,30,40,51,
+                         45,33,48,44,49,39,56,34,53,46,
+                         42,50,36,29,32]
+    leftShifts = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
+
+   if leftShifts[numeroRound] == 1
+
+      i = 0;
+       while i < d0.length
+           if i == (d0.length)-1
+               d1.push(d0[0])
+               c1.push(c0[0])
+           else
+
+               d1.push(d0[i+1])
+               c1.push(c0[i+1])
+           end
+           i += 1;
+       end
+   elsif leftShifts[numeroRound] == 2
+     i = 0;
+      while i < d0.length
+           if i == (d0.length)-1
+               d1.push(d0[1])
+               c1.push(c0[1])
+
+           elsif i == (d0.length)-2
+               d1.push(d0[0])
+               c1.push(c0[0])
+           else
+               d1.push(d0[i+2])
+               c1.push(c0[i+2])
+           end
+           i += 1;
+        end
+    end
+    j = 0
+    while j < 28
+       matrizRevuelta.push(c1[j])
+       j += 1
+    end
+    k=0
+    while k < 28
+      matrizRevuelta.push(d1[k])
+      k += 1
+    end
+
+   permutedChoicetwo.each do |i|
+       newKey.push(matrizRevuelta[i-1])
+   end
+   wholeArray = Array.new()
+   wholeArray.push(d1)
+   wholeArray.push(c1)
+   wholeArray.push(newKey)
+
+   return wholeArray
+ end
 
 end
 
