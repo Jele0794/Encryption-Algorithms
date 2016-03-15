@@ -5,10 +5,10 @@ require_relative "s-box"
 # beggining of the block
 class Des
 
-def initialize(plainText="01234567")
+def initialize(plainText="HOLAMUND")
    plainBinText = getBin(plainText)
    creatingSBoxes
-   encipherment(plainBinText)
+   cipherText = encipherment(plainBinText)
 end
 
 def encipherment(plainBinText)
@@ -31,8 +31,14 @@ def encipherment(plainBinText)
       i += 1
    end
 
+      swapArray = lastSwap(leftArr, rightArr)
+      cipherTextBin = finalPermutation(swapArray)
+      binding.pry
+      cipherText = fromBinToAscii(cipherTextBin)
+      return cipherText
+
+
    # TODO hace falta 32-bit Swap
-   binding.pry
 
    return true
 
@@ -59,6 +65,7 @@ def getBin(plainText)
 end
 # This method does the initial permutation
 def initialPermutation(plainBinText)
+
    matrizIP = Array.new()
    # Top Half done with the following block of code
    j = 0
@@ -66,7 +73,7 @@ def initialPermutation(plainBinText)
    while i < 8
       matrizFila = Array.new()
       while j < 8
-         matrizFila.push(plainBinText[j][i])
+         matrizFila.unshift(plainBinText[j][i])
          j += 1
       end
       matrizIP.push(matrizFila)
@@ -78,7 +85,7 @@ def initialPermutation(plainBinText)
    while i < 7
       matrizFila = Array.new()
       while j < 8
-         matrizFila.push(plainBinText[j][i])
+         matrizFila.unshift(plainBinText[j][i])
          j += 1
       end
       matrizIP.push(matrizFila)
@@ -87,6 +94,94 @@ def initialPermutation(plainBinText)
    end
    return matrizIP
 end
+
+def lastSwap(leftArr, rightArr)
+   swapArray = Array.new()
+   blockSwapArray = Array.new()
+   # TODO Preguntar acerca de orden!!
+   rightArr.each { |e| swapArray.push(e) }
+   leftArr.each { |e| swapArray.push(e) }
+
+   i = 0
+   k = 7
+   j = 0
+   while j < 8
+      filaArray = Array.new()
+      filaArray = swapArray[i..k]
+      i += 8
+      k += 8
+      blockSwapArray.push(filaArray)
+      j += 1
+   end
+   return blockSwapArray
+end
+
+def finalPermutation(swapArray)
+
+   matrizFP = Array.new()
+   # Top Half to odd columns (considering it'll begin with 0 and NOT with 1)
+   j = 0
+   i = 7
+   k = 0
+   top = true
+   while i > -1
+      matrizFila = Array.new()
+      while j < 8
+         matrizFila.push(swapArray[j][i])
+         if top == true
+            j += 4
+            top = false
+         elsif top == false
+            j -= 3
+            top = true
+            k += 1
+         elsif j == 7
+
+         end
+
+      end
+      matrizFP.push(matrizFila)
+      i -= 1
+      j = 0
+      top = true
+   end
+   i = 0
+   while i < 8
+      matrizFP[i].delete_at(-1)
+      i += 1
+   end
+   return matrizFP
+end
+
+def fromBinToAscii(binArray)
+   binString = ""
+   i = 0
+   # while i <  8
+   #    j = 0
+   #    while j < 8
+   #       binString = binString + binArray[i][j].to_s
+   #       j += 1
+   #    end
+   #    i += 1
+   # end
+
+   # i = 0
+   # while i < 8
+   #    binString[i, 8].to_i
+   # end
+
+i = 0
+newArray = Array.new()
+# TODO Se necesita convertir de binario a Ascii y se termina!!! ""
+while i < 8
+   newArray.push(convertIntArrToStrArr(binArray[i]))
+i += 1
+end
+   c = newArray[0].pack('C')
+   binding.pry
+
+end
+
 # This methos divides the full block in two halves
 def divideInTwo(iPResult)
    i = 0
