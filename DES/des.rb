@@ -1,5 +1,5 @@
 require 'pry'
-require_relative "s-box"
+require_relative 's-box'
 # TODO If the plainText is greater than 64 bits it has to run this two times, but running each 64-bit
 # blocks again... If there is a shorter block (less than 64-bit), then it has to add 0's to the
 # beggining of the block
@@ -9,12 +9,16 @@ def initialize(plainText="HOLAMUND")
    plainBinText = getBin(plainText)
    creatingSBoxes
    cipherText = encipherment(plainBinText)
+   getplainBinText(plainBinText)
+end
+def getplainBinText(plainBinText)
+   return plainBinText
 end
 
 def encipherment(plainBinText)
    # First it has to do the 'Initial Permutation'
    # Then the 16 rounds
-      # On each round it recieves a different key
+      # On each round it recieves a different key ""
    # The next step is the '32-bit Swap'
    # Finally it has to do the 'Inverse Initial Permutation'
 
@@ -30,12 +34,10 @@ def encipherment(plainBinText)
       rightArr = xORRound(roundResult, tempLeft)
       i += 1
    end
-
       swapArray = lastSwap(leftArr, rightArr)
       cipherTextBin = finalPermutation(swapArray)
-      binding.pry
-      cipherText = fromBinToAscii(cipherTextBin)
-      return cipherText
+      #cipherText = fromBinToAscii(cipherTextBin)
+      return cipherTextBin
 
 
    # TODO hace falta 32-bit Swap
@@ -153,34 +155,33 @@ def finalPermutation(swapArray)
    return matrizFP
 end
 
-def fromBinToAscii(binArray)
-   binString = ""
-   i = 0
-   # while i <  8
-   #    j = 0
-   #    while j < 8
-   #       binString = binString + binArray[i][j].to_s
-   #       j += 1
-   #    end
-   #    i += 1
-   # end
-
-   # i = 0
-   # while i < 8
-   #    binString[i, 8].to_i
-   # end
-
-i = 0
-newArray = Array.new()
-# TODO Se necesita convertir de binario a Ascii y se termina!!! ""
-while i < 8
-   newArray.push(convertIntArrToStrArr(binArray[i]))
-i += 1
-end
-   c = newArray[0].pack('C')
-   binding.pry
-
-end
+# def fromBinToAscii(binArray)
+#    binString = ""
+#    i = 0
+#    # while i <  8
+#    #    j = 0
+#    #    while j < 8
+#    #       binString = binString + binArray[i][j].to_s
+#    #       j += 1
+#    #    end
+#    #    i += 1
+#    # end
+#
+#    # i = 0
+#    # while i < 8
+#    #    binString[i, 8].to_i
+#    # end
+#
+# i = 0
+# newArray = Array.new()
+# # TODO Se necesita convertir de binario a Ascii y se termina!!! ""
+# while i < 8
+#    newArray.push(convertIntArrToStrArr(binArray[i]))
+# i += 1
+# end
+#    c = newArray[0].pack('C')
+#
+# end
 
 # This methos divides the full block in two halves
 def divideInTwo(iPResult)
