@@ -10,6 +10,7 @@ def initialize(plainText="HOLAMUND")
    creatingSBoxes
    cipherText = encipherment(plainBinText)
    getplainBinText(plainBinText)
+   binding.pry
 end
 def getplainBinText(plainBinText)
    return plainBinText
@@ -50,6 +51,7 @@ end
 def getBin(plainText)
    matriz = Array.new()
    plainBinTextArr = plainText.unpack('B64')
+
    plainBinText = Array.new()
    plainBinTextArr[0].each_char { |chr| plainBinText.push(chr)}
 
@@ -183,7 +185,7 @@ end
 #
 # end
 
-# This methos divides the full block in two halves
+# This method divides the full block in two halves
 def divideInTwo(iPResult)
    i = 0
    rightArr = Array.new()

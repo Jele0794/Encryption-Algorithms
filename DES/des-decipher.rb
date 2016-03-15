@@ -2,15 +2,14 @@ require 'pry'
 require_relative 's-box'
 require_relative 'des'
 class DesDecipher
-   def initialize(cipherText = "CHEPO")
+   def initialize(cipherText = "HOLAMUND")
       @des = Des.new()
       decipherTextBin = @des.getBin(cipherText)
 
 
-      decipherText = deciphering(decipherTextBin)
+      decipherTextBin = deciphering(decipherTextBin)
+      hexStr = toHex(decipherTextBin)
 
-
-      binding.pry
 
    end
 
@@ -57,6 +56,44 @@ def joinArrays(leftArr, rightArr)
       j += 1
    end
    return blockSwapArray
+end
+
+def toHex(decipherTextBin)
+
+   hexArray = Array.new()
+   newArray = Array.new()
+   binArray = Array.new()
+   hexStr = ""
+   binStr = ""
+   i=0
+   while i < 8
+      newArray.push(@des.convertIntArrToStrArr(decipherTextBin[i]))
+      i += 1
+   end
+
+   i = 0
+   l = 0
+   k = 0
+   j = 3
+   while l < 8
+      while i < 2
+         newArray[l][k..j].each { |e| binStr = binStr + e }
+         hexStr = hexStr + binStr.to_i(2).to_s(16)
+         j += 4
+         k += 4
+         i += 1
+         if l == 7
+            binding.pry
+         end
+         binStr = ""
+      end
+      j = 3
+      k = 0
+      i = 0
+      l += 1
+   end
+   binding.pry
+   return hexStr
 end
 
 end
