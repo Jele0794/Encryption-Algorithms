@@ -2,13 +2,15 @@ require 'pry'
 require_relative 's-box'
 require_relative 'des'
 class DesDecipher
-   def initialize(cipherText = "HOLAMUND")
+   def initialize(cipherText = "c8bd1ff9ddf759ea")
       @des = Des.new()
-      decipherTextBin = @des.getBin(cipherText)
-
+      @wholeArray = @des.getwholeArrayKey
+      # decipherTextBin = @des.getBin(cipherText)
+      decipherTextBin = hexToBin(cipherText)
 
       decipherTextBin = deciphering(decipherTextBin)
       hexStr = toHex(decipherTextBin)
+      binding.pry
 
 
    end
@@ -19,21 +21,47 @@ def deciphering(decipherTextBin)
    leftArr = twoHalvesArr[0]
    rightArr = twoHalvesArr[1]
    # Round
-   i = 0
-   while i < 16
+   i = 15
+   while i > -1
       tempLeft = leftArr;
-      desRoundResult = desRound(leftArr)
+      desRoundResult = desRound(leftArr, i)
       leftArr = @des.xORRound(desRoundResult, rightArr)
       rightArr = tempLeft
-      i+=1
+      i-=1
    end
    swapArray = @des.lastSwap(leftArr, rightArr)
    joined = joinArrays(leftArr, rightArr)
    iPResult = @des.finalPermutation(joined)
    return iPResult
 end
-def desRound(leftArr)
-   return @des.round(leftArr)
+
+def hexToBin(plainText)
+
+   matriz = Array.new()
+   plainBinTextArr = [plainText].pack('H*')
+   plainBinTextArr = plainBinTextArr.unpack('B64')
+
+   plainBinText = Array.new()
+   plainBinTextArr[0].each_char { |chr|
+   plainBinText.push(chr) }
+
+
+   i = 0
+   j = 0
+   # Con este while se planea llenar la matriz "matriz"
+   while i < 8
+      # Se inserta en la posición i el segmento de 8 elementos
+      # desde la posición j de la matriz "plainBinText".
+      matriz.insert(i, plainBinText[j, 8])
+      i += 1
+      j = j+8
+   end
+   return matriz
+
+end
+
+def desRound(leftArr, i)
+   return @des.round(leftArr, i)
 
 end
 def joinArrays(leftArr, rightArr)
@@ -83,7 +111,6 @@ def toHex(decipherTextBin)
          k += 4
          i += 1
          if l == 7
-            binding.pry
          end
          binStr = ""
       end
@@ -92,7 +119,6 @@ def toHex(decipherTextBin)
       i = 0
       l += 1
    end
-   binding.pry
    return hexStr
 end
 

@@ -5,14 +5,24 @@ require_relative 's-box'
 # beggining of the block
 class Des
 
-<<<<<<< HEAD
-def initialize(plainText="484f4c414d554e44")
+def initialize(plainText="0123456789ABCDEF")
+   @wholeArray = Array.new()
    plainBinText = hexToBin(plainText)
    #plainBinText = getBin(plainText)
    creatingSBoxes
+   bool, d0, c0 = permutedChoiceOne("133457799BBCDFF1")
+   i = 0
+   @wholeArray.push(keyGeneration(d0,c0,i))
+   while i < 15
+     @wholeArray.push(keyGeneration(@wholeArray[i][0], @wholeArray[i][1], i))
+     i += 1
+   end
    cipherText = encipherment(plainBinText)
    getplainBinText(plainBinText)
-   binding.pry
+   #binding.pry
+end
+def getwholeArrayKey
+   return @wholeArray
 end
 def getplainBinText(plainBinText)
    return plainBinText
@@ -30,7 +40,6 @@ def hexToBin(plainText)
    plainBinText.push(chr) }
 
 
-   binding.pry
    i = 0
    j = 0
    # Con este while se planea llenar la matriz "matriz"
@@ -41,23 +50,8 @@ def hexToBin(plainText)
       i += 1
       j = j+8
    end
-   binding.pry
    return matriz
-=======
-def initialize(plainText="HOLAMUND")
-  @wholeArray = Array.new()
-   plainBinText = getBin(plainText)
-   creatingSBoxes
-   cipherText = encipherment(plainBinText)
-   bool, d0, c0 = permutedChoiceOne("holiboli")
-   i = 0
-   @wholeArray.push(keyGeneration(d0,c0,i))
-   while i < 15
-     @wholeArray.push(keyGeneration(@wholeArray[i][0], @wholeArray[i][1], i))
-     i += 1
-   end
-   binding.pry
->>>>>>> ab8603a332b9acd6a0b02ddc3cd61944987b8ea2
+
 end
 
 def encipherment(plainBinText)
@@ -73,7 +67,7 @@ def encipherment(plainBinText)
    rightArr = twoHalvesArr[1]
    i = 0
    while i < 16
-      roundResult = round(rightArr)
+      roundResult = round(rightArr, i)
       tempLeft = leftArr
       leftArr = rightArr
       rightArr = xORRound(roundResult, tempLeft)
@@ -81,15 +75,14 @@ def encipherment(plainBinText)
    end
       swapArray = lastSwap(leftArr, rightArr)
       cipherTextBin = finalPermutation(swapArray)
-<<<<<<< HEAD
+#<<<<<<< HEAD
       cipherText =  toHex(cipherTextBin)
-binding.pry
 
       return cipherText
-=======
+# =======
       # cipherText = fromBinToAscii(cipherTextBin)
-      return cipherTextBin
->>>>>>> ab8603a332b9acd6a0b02ddc3cd61944987b8ea2
+      #return cipherTextBin
+#>>>>>>> ab8603a332b9acd6a0b02ddc3cd61944987b8ea2
 
 
    # TODO hace falta 32-bit Swap
@@ -131,7 +124,6 @@ def toHex(decipherTextBin)
       i = 0
       l += 1
    end
-   binding.pry
    return hexStr
 end
 
@@ -270,10 +262,7 @@ end
 # i += 1
 # end
 #    c = newArray[0].pack('C')
-<<<<<<< HEAD
-=======
 #    binding.pry
->>>>>>> ab8603a332b9acd6a0b02ddc3cd61944987b8ea2
 #
 # end
 
@@ -296,9 +285,9 @@ def divideInTwo(iPResult)
    return wholeArr
 end
 # This method calls every method of a round
-def round (rightArr)
+def round (rightArr, i)
    expandedArray = expansion(rightArr)
-   xORArray = xORRound(expandedArray, expandedArray) # Se necesita cambiar el segundo parámetro por la llave
+   xORArray = xORRound(expandedArray, @wholeArray[i][2]) # Se necesita cambiar el segundo parámetro por la llave
    substitutionArray = substitution(xORArray)
    permutedArray = permutation(substitutionArray)
    return permutedArray
