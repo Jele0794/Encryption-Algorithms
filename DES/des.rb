@@ -5,8 +5,9 @@ require_relative 's-box'
 # beggining of the block
 class Des
 
-def initialize(plainText="HOLAMUND")
-   plainBinText = getBin(plainText)
+def initialize(plainText="484f4c414d554e44")
+   plainBinText = hexToBin(plainText)
+   #plainBinText = getBin(plainText)
    creatingSBoxes
    cipherText = encipherment(plainBinText)
    getplainBinText(plainBinText)
@@ -14,6 +15,33 @@ def initialize(plainText="HOLAMUND")
 end
 def getplainBinText(plainBinText)
    return plainBinText
+end
+
+# This method is used when the input is an hexadecimal number instead of the plainText
+def hexToBin(plainText)
+
+   matriz = Array.new()
+   plainBinTextArr = [plainText].pack('H*')
+   plainBinTextArr = plainBinTextArr.unpack('B64')
+
+   plainBinText = Array.new()
+   plainBinTextArr[0].each_char { |chr|
+   plainBinText.push(chr) }
+
+
+   binding.pry
+   i = 0
+   j = 0
+   # Con este while se planea llenar la matriz "matriz"
+   while i < 8
+      # Se inserta en la posición i el segmento de 8 elementos
+      # desde la posición j de la matriz "plainBinText".
+      matriz.insert(i, plainBinText[j, 8])
+      i += 1
+      j = j+8
+   end
+   binding.pry
+   return matriz
 end
 
 def encipherment(plainBinText)
@@ -37,14 +65,53 @@ def encipherment(plainBinText)
    end
       swapArray = lastSwap(leftArr, rightArr)
       cipherTextBin = finalPermutation(swapArray)
-      #cipherText = fromBinToAscii(cipherTextBin)
-      return cipherTextBin
+      cipherText =  toHex(cipherTextBin)
+binding.pry
+
+      return cipherText
 
 
    # TODO hace falta 32-bit Swap
 
    return true
 
+end
+
+def toHex(decipherTextBin)
+
+   hexArray = Array.new()
+   newArray = Array.new()
+   binArray = Array.new()
+   hexStr = ""
+   binStr = ""
+   i=0
+   while i < 8
+      newArray.push(convertIntArrToStrArr(decipherTextBin[i]))
+      i += 1
+   end
+
+   i = 0
+   l = 0
+   k = 0
+   j = 3
+   while l < 8
+      while i < 2
+         newArray[l][k..j].each { |e| binStr = binStr + e }
+         hexStr = hexStr + binStr.to_i(2).to_s(16)
+         j += 4
+         k += 4
+         i += 1
+         if l == 7
+         end
+         binStr = ""
+      end
+      j = 3
+      k = 0
+      i = 0
+      l += 1
+   end
+   binding.pry
+   return hexStr
 end
 
 # This method will obtain the Hex number of a char (Ascii)
